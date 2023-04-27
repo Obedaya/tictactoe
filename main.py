@@ -17,18 +17,15 @@ class Model:
             return True
 
     def is_win(self, field):
-        for i in range(3):
-            if all(x == field[i][0] for x in field):
-                return field[i][0]
-        for i in range(3):
-            if all(x == field[0][i] for x in field):
-                return field[0][i]
         if field[0][0] == field[1][1] == field[2][2] or field[0][2] == field[1][1] == field[2][0]:
-            return field[0][0]
+            return field[1][1]
+        for i in range(3):
+            if field[i][0] == field[i][1] == field[i][2] or field[0][i] == field[1][i] == field[2][i]:
+                return field[i][i]
 
 
 test = Model()
 print(test.create_field())
-tictactoe = [['x', 0, 0], ['x', 0, 0], ['x', 0, 0]]
+tictactoe = [['y', 'y', 0], ['x', 'y', 'y'], ['y', 0, 'y']]
 print(test.is_win(tictactoe))
 print("Hello World")
