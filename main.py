@@ -16,15 +16,19 @@ class Model:
         else:
             return True
 
-    def is_win(self, field, player):
+    def is_win(self, field):
         for i in range(3):
             if all(x == field[i][0] for x in field):
                 return field[i][0]
         for i in range(3):
             if all(x == field[0][i] for x in field):
                 return field[0][i]
+        if field[0][0] == field[1][1] == field[2][2] or field[0][2] == field[1][1] == field[2][0]:
+            return field[0][0]
 
 
 test = Model()
 print(test.create_field())
+tictactoe = [['x', 0, 0], ['x', 0, 0], ['x', 0, 0]]
+print(test.is_win(tictactoe))
 print("Hello World")
