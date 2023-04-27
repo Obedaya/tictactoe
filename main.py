@@ -38,7 +38,32 @@ class Controller:
 
 # Handles the View and User Input
 class View:
-    placeholder = None
+    def print_field(self):
+
+        field = """
+         {} | {} | {}
+        ---+---+---
+         {} | {} | {}
+        ---+---+---
+         {} | {} | {}
+        """
+
+        # Create a list of placeholders for the cell values
+        placeholders = []
+        for i in tictactoe:
+            placeholders.extend([str(j) if j != 0 else ' ' for j in i])
+
+        # Fill in the placeholders in the field string with the cell values
+        field = field.format(*placeholders)
+        print(field)
+        print("Player 1's turn!")
+        row_input = int(input("Pick a row: "))
+        column_input = int(input("Pick a column: "))
+        print(field)
+
+tictactoe = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+test_2 = View()
+test_2.print_field()
 
 
 # Handles the View, Model and Controller
@@ -48,6 +73,6 @@ class GameManager:
 
 test = Model()
 print(test.create_field())
-tictactoe = [['y', 'y', 0], ['x', 'y', 'y'], ['y', 0, 'y']]
-print(test.is_win(tictactoe))
-print("Hello World")
+tictactoe = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+#print(test.is_win(tictactoe))
+test_2 = View()
