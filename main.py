@@ -1,22 +1,30 @@
 # Handles all the Data and logical components
 class Model:
-    def create_field(self):
-        return [[0] * 3 for i in range(3)]
+    field = list(list())
 
-    def make_move(self, move, field, player):
+    def __init__(self):
+        self.field = self.create_field()
+
+    def create_field(self):
+        field = [[None] * 3 for i in range(3)]
+        return field
+
+    def make_move(self, move, player):
         x, y = move
         if player == "x":
-            field[x][y] = 1
+            self.field[x][y] = 'x'
         elif player == "o":
-            field[x][y] = 0
+            self.field[x][y] = 'o'
 
+    def get_field(self):
+        return self.field
 
 # Handles the connection between Model and View
 class Controller:
 
     def is_valid_move(self, field, move):
         x, y = move
-        if field[x][y] == 'x' or field[x][y] == 'y':
+        if field[x][y] == 'x' or field[x][y] == 'o':
             return False
         else:
             return True
@@ -35,6 +43,25 @@ class Controller:
         # No winner yet
         return None
 
+    def round(self, model, view, player, round):
+        field = model.get_field()
+        view.print_field(field)
+        move = view.get_input()
+        if self.is_valid_move(field, move):
+            field = model.make_move(move, player)
+            view.print_field(field)
+        else:
+            view.not_valid_move()
+        if round == 5 and self.is_win(field):
+            self.end_game(view)
+
+    def end_game(self, view):
+        view.print_end_game()
+        view.get_input()
+
+
+
+
 
 # Handles the View and User Input
 class View:
@@ -50,4 +77,3 @@ test = Model()
 print(test.create_field())
 tictactoe = [['y', 'y', 0], ['x', 'y', 'y'], ['y', 0, 'y']]
 print(test.is_win(tictactoe))
-print("Hello World")
