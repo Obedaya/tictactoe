@@ -17,14 +17,21 @@ class Game:
         self._view = v.View()
 
     def start_game(self):
-        self._view.print_menu()
-        self._player1 = p.Player(self._view.get_input_playername(1), 'x')
-        self._player2 = p.Player(self._view.get_input_playername(2), 'o')
+        option = self._view.print_menu()
+        if option == 1:
+            self._player1 = p.Player(self._view.get_input_playername(1), 'x')
+            self._player2 = p.Player(self._view.get_input_playername(2), 'o')
+        elif option == 2:
+            #load game
+            None
+        elif option == 3:
+            quit()
+
 
     def is_valid_move(self, move):
         x, y = move
         field = self._board.get_field()
-        if field[x][y] is None:
+        if field[x][y] == " ":
             return True
         else:
             return False
@@ -47,13 +54,13 @@ class Game:
         return None
 
     def round(self, player):
+        self._view.print_next_player(player)
         field = self._board.get_field()
         self._view.print_field(field)
         move = self._view.get_input_move()
-        if self.is_valid_move(field, move):
+        if self.is_valid_move(move):
             token = t.Token(player, player.get_type())
-            field = self._board.make_move(move, token)
-            self._view.print_field(field)
+            self._board.make_move(move, token)
         else:
             self._view.print_nvm()
             self.round(player)
@@ -62,22 +69,27 @@ class Game:
         if option == "tie":
             self._view.print_tie()
         else:
-            self.view.print_winner(option)
+            self._view.print_winner(option)
 
     def main(self):
         game_running = True
         self.start_game()
         current_player = self._view.get_first_player(self._player1, self._player2)
+        self._view.print_tutorial()
 
         while game_running:
             self.round(current_player)
 
-            if self._round_number == 5:
+            if self._round_number >= 5:
                 condition = self.is_win()
                 if condition == "tie" or condition is not False:
                     self.end_game(condition)
                     game_running = False
-                else:
-                    self._round_number += 1
+
+            self._round_number += 1
+            if current_player == self._player1:
+                current_player = self._player2
+            else:
+                current_player = self._player1
 
         self._view.end()

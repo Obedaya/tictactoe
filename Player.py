@@ -8,3 +8,6 @@ class Player:
 
     def get_type(self):
         return self._type
+
+    def get_name(self):
+        return self._name
