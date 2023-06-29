@@ -7,4 +7,6 @@ class Token:
         self.token_type = token_type
 
     def __eq__(self, other):
-        return self.token_type == other.token_type
+        if isinstance(other, Token):
+            return self.token_type == other.token_type
+        return False

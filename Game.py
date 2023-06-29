@@ -67,7 +67,7 @@ class Game:
         if option == "tie":
             self._view.print_tie()
         else:
-            self._view.print_winner(option)
+            self._view.print_winner(option.get_name())
 
     def main(self):
         game_running = True
