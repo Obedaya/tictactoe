@@ -36,6 +36,9 @@ class View:
             else:
                 print("This is not an valid option!")
 
+    def get_input_file_path(self):
+        return input("Please input the name of the file: ")
+
     def print_menu(self):
         print("Welcome to")
         intro = """

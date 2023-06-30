@@ -2,9 +2,11 @@ import Board as b
 import Player as p
 import View as v
 import Token as t
+import FileHandler as fh
 
 
 class Game:
+    _file_handler = None
     _board = None
     _view = None
     _player1 = None
@@ -15,6 +17,7 @@ class Game:
     def __init__(self):
         self._board = b.Board()
         self._view = v.View()
+        self._file_handler = fh.FileHandler()
 
     def start_game(self):
         option = self._view.print_menu()
@@ -23,7 +26,8 @@ class Game:
             self._player2 = p.Player(self._view.get_input_playername(2), 'o')
         elif option == 2:
             #load game
-            None
+
+            file_path = self._view.get_input_file_path()
         elif option == 3:
             quit()
 
@@ -51,9 +55,10 @@ class Game:
         for i in range(3):
             for j in range(3):
                 if field[i][j] == " ":
+                    # No winner or tie yet
                     return False
-        # No winner yet
-        return None
+        # The game is a tie
+        return "tie"
 
     def round(self, player):
         self._view.print_next_player(player)
