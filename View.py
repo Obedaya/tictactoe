@@ -14,8 +14,13 @@ class View:
 
     def get_input_move(self):
         move = (0, 0)
-        ttt_input = self.get_integer_input("Pick a number between 1 and 9: ")
-        move = divmod(ttt_input - 1, 3)
+        while True:
+            ttt_input = self.get_integer_input("Pick a number between 1 and 9: ")
+            if 1 <= ttt_input <= 9:
+                move = divmod(ttt_input - 1, 3)
+                break
+            else:
+                print("Not a valid input!")
         return move
 
     def get_first_player(self, player1, player2):

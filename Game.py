@@ -46,8 +46,10 @@ class Game:
             if field[i][0] == field[i][1] == field[i][2] or field[0][i] == field[1][i] == field[2][i]:
                 return field[i][i].player
         # Check for tie
-        if all(all(row) for row in field):
-            return "tie"
+        for i in range(3):
+            for j in range(3):
+                if field[i][j] == " ":
+                    return False
         # No winner yet
         return None
 
