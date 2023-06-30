@@ -40,11 +40,13 @@ class Game:
         field = self._board.get_field()
         # Check for diagonal win
         if field[0][0] == field[1][1] == field[2][2] or field[0][2] == field[1][1] == field[2][0]:
-            return field[1][1].player
+            if not isinstance(field[1][1], str):
+                return field[1][1].player
         # Check for vertical or horizontal win
         for i in range(3):
             if field[i][0] == field[i][1] == field[i][2] or field[0][i] == field[1][i] == field[2][i]:
-                return field[i][i].player
+                if not isinstance(field[i][i], str):
+                    return field[i][i].player
         # Check for tie
         for i in range(3):
             for j in range(3):
@@ -83,6 +85,8 @@ class Game:
             if self._round_number >= 4:
                 condition = self.is_win()
                 if condition == "tie" or condition is not False:
+                    field = self._board.get_field()
+                    self._view.print_field(field)
                     self.end_game(condition)
                     game_running = False
 

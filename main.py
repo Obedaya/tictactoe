@@ -1,4 +1,5 @@
 import Game
 
-newgame = Game.Game()
-newgame.main()
+while True:
+    newgame = Game.Game()
+    newgame.main()
