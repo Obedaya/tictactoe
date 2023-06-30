@@ -1,5 +1,5 @@
-import Game
+from classes import Game
 
 while True:
-    newgame = Game.Game()
-    newgame.main()
+    new_game = Game.Game()
+    new_game.main()

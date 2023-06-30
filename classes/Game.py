@@ -1,8 +1,8 @@
-import Board as b
-import Player as p
-import View as v
-import Token as t
-import FileHandler as fh
+from classes import Board as b
+from classes import Player as p
+from classes import View as v
+from classes import Token as t
+from classes import FileHandler as fh
 
 
 class Game:
@@ -11,7 +11,7 @@ class Game:
     _view = None
     _player1 = None
     _player2 = None
-
+    _current_player = None
     _round_number = 0
 
     def __init__(self):
@@ -24,10 +24,21 @@ class Game:
         if option == 1:
             self._player1 = p.Player(self._view.get_input_playername(1), 'x')
             self._player2 = p.Player(self._view.get_input_playername(2), 'o')
+            if self._player1 == 'q' or self._player2 == 'q':
+                quit()
+            self._current_player = self._view.get_first_player(self._player1, self._player2)
         elif option == 2:
-            #load game
-
+            self._view.print_list_savegames(self._file_handler.get_list_savegames())
             file_path = self._view.get_input_file_path()
+            game_state = self._file_handler.load_game_state(file_path)
+
+            self._player1 = game_state._player1
+            self._player2 = game_state._player2
+            self._board = game_state._board
+            self._round_number = game_state._round_number
+            self._current_player = game_state._current_player
+
+
         elif option == 3:
             quit()
 
@@ -65,6 +76,8 @@ class Game:
         field = self._board.get_field()
         self._view.print_field(field)
         move = self._view.get_input_move()
+        if move == 'q':
+            self.pause_game()
         if self.is_valid_move(move):
             token = t.Token(player, player.get_type())
             self._board.make_move(move, token)
@@ -78,14 +91,20 @@ class Game:
         else:
             self._view.print_winner(option.get_name())
 
+    def pause_game(self):
+        file_path = self._view.get_input_file_path()
+        self._file_handler.save_game_state(file_path, self)
+        quit()
+
     def main(self):
         game_running = True
         self.start_game()
-        current_player = self._view.get_first_player(self._player1, self._player2)
+        if self._current_player == 'q':
+            quit()
         self._view.print_tutorial()
 
         while game_running:
-            self.round(current_player)
+            self.round(self._current_player)
 
             if self._round_number >= 4:
                 condition = self.is_win()
@@ -96,9 +115,9 @@ class Game:
                     game_running = False
 
             self._round_number += 1
-            if current_player == self._player1:
-                current_player = self._player2
+            if self._current_player == self._player1:
+                self._current_player = self._player2
             else:
-                current_player = self._player1
+                self._current_player = self._player1
 
         self._view.end()

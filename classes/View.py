@@ -1,4 +1,4 @@
-import Token as t
+from classes import Token as t
 
 class View:
     def get_integer_input(self, message):
@@ -6,6 +6,8 @@ class View:
             user_input = input(message)
             if user_input.isdigit():
                 return int(user_input)
+            elif user_input == 'q':
+                return 'q'
             else:
                 print("Invalid input. Please enter an integer.")
 
@@ -15,7 +17,9 @@ class View:
     def get_input_move(self):
         move = (0, 0)
         while True:
-            ttt_input = self.get_integer_input("Pick a number between 1 and 9: ")
+            ttt_input = self.get_integer_input("Pick a number between 1 and 9 or 'q' to save and quit: ")
+            if ttt_input == 'q':
+                return 'q'
             if 1 <= ttt_input <= 9:
                 move = divmod(ttt_input - 1, 3)
                 break
@@ -33,6 +37,8 @@ class View:
                 return player1
             elif player_input == 2:
                 return player2
+            elif player_input == 'q':
+                return 'q'
             else:
                 print("This is not an valid option!")
 
@@ -59,6 +65,8 @@ class View:
             print("Quit [3]")
             print("----------------------------------")
             option = self.get_integer_input("Choose an option: ")
+            if option == 'q':
+                option = 3
             if 1 <= option <= 3:
                 return option
             else:
@@ -112,6 +120,11 @@ class View:
 
     def print_next_player(self, player):
         print(f"It's your turn: {player.get_name()}")
+
+    def print_list_savegames(self, savegames_list):
+        if savegames_list:
+            for i in savegames_list:
+                print("- " + i)
 
     def end(self):
         input("Thanks for playing! To go back to the menu press any button: ")
