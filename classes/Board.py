@@ -13,6 +13,9 @@ class Board:
     def get_field(self):
         return self._field
 
+    def set_field(self, field):
+        self._field = field
+
     def undo(self):
         x, y = self._last_move
         self._field[x][y] = " "

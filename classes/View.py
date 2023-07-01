@@ -127,5 +127,8 @@ class View:
             for i in savegames_list:
                 print("- " + i)
 
+    def print_move(self, move):
+        print(f"Moved to: {move}")
+
     def end(self):
         input("Thanks for playing! To go back to the menu press any button: ")

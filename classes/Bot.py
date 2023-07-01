@@ -1,5 +1,6 @@
 import math
 import copy
+import random
 from classes import Player as p
 from classes import Token as t
 
@@ -9,59 +10,66 @@ class Bot(p.Player):
         super().__init__(name, type)
         self.is_AI = True
 
-    def make_best_move(self, board):
+    def make_best_move(self, board, inactive_player):
         board_copy = copy.deepcopy(board)
-        bestScore = -math.inf
-        bestMove = None
-        for move in self.get_possible_moves(board_copy):
-            board_copy.make_move(move, t.Token(self, self.get_type()))
-            score = self.minimax(False, self, board_copy)
-            board_copy.undo()
-            if score > bestScore:
-                bestScore = score
-                bestMove = move
-        board.make_move(bestMove, t.Token(self, self.get_type()))
+        move = self.minimax(board_copy, True, inactive_player)
+        board.make_move(move[1], t.Token(self, self.get_type()))
+        return move
 
-    def get_possible_moves(self, board):
-        field = board.get_field()
-        possible_moves = []
-        for i in range(3):
-            for j in range(3):
-                if field[i][j] == " ":
-                    possible_moves.append((i, j))
-        return possible_moves
+    def minimax(self, current_board, is_maximizing, inactive_player):
+        check_win = self.is_win(current_board, inactive_player)
+        if check_win == (1, 1):  # Draw
+            return 0, None
+        if check_win == (1, 0):  # Player wins
+            return -1, None
+        if check_win == (0, 1):  # AI wins
+            return 1, None
 
-    def get_state(self, board):
+        best_score = float('-inf') if is_maximizing else float('inf')
+        best_moves = []
+
+        current_field = current_board.get_field()
+
+        for j in range(0, len(current_field)):
+            for k in range(0, len(current_field)):
+                if current_field[j][k] == " ":
+                    current_field[j][k] = t.Token(inactive_player, inactive_player.get_type()) if not is_maximizing \
+                        else t.Token(self, self.get_type())
+                    current_board.set_field(current_field)
+                    score = self.minimax(current_board, not is_maximizing, inactive_player)[0]
+                    current_field[j][k] = " "
+                    current_board.set_field(current_field)
+
+                    if is_maximizing and score > best_score:
+                        best_score = score
+                        best_moves = [(j, k)]
+                    elif not is_maximizing and score < best_score:
+                        best_score = score
+                        best_moves = [(j, k)]
+                    elif score == best_score:
+                        best_moves.append((j, k))
+
+        return best_score, random.choice(best_moves)
+
+    def is_win(self, board, inactive_player):
         field = board.get_field()
+        # Check for diagonal win
         if field[0][0] == field[1][1] == field[2][2] or field[0][2] == field[1][1] == field[2][0]:
             if not isinstance(field[1][1], str):
-                return field[1][1].player
+                if field[1][1].player.is_AI and field[1][1].player != inactive_player:
+                    return 0, 1
+                else:
+                    return 1, 0
         # Check for vertical or horizontal win
         for i in range(3):
             if field[i][0] == field[i][1] == field[i][2] or field[0][i] == field[1][i] == field[2][i]:
                 if not isinstance(field[i][i], str):
-                    return field[i][i].player
+                    if field[i][i].player.is_AI and field[i][i].player != inactive_player:
+                        return 0, 1
+                    else:
+                        return 1, 0
         # Check for tie
-        for i in range(3):
-            for j in range(3):
-                if field[i][j] == " ":
-                    # No winner or tie yet
-                    return -1
-        # The game is a tie
-        return 0
+        if any(" " in row for row in field):
+            return 0, 0  # No winner or tie yet
 
-    def minimax(self, isMaxTurn, maximizerMark, board):
-        state = self.get_state(board)
-        # If game is a tie
-        if state == 0:
-            return 0
-        elif state != -1:
-            return 1 if state.get_name() == self._name else -1
-
-        scores = []
-        for move in self.get_possible_moves(board):
-            board.make_move(move, t.Token(self, self.get_type()))
-            scores.append(self.minimax(not isMaxTurn, maximizerMark, board))
-            board.undo()
-
-        return max(scores) if isMaxTurn else min(scores)
+        return 1, 1  # The game is a tie

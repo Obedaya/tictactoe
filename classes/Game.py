@@ -41,7 +41,7 @@ class Game:
 
         elif option == 3:
             self._player2 = Bot.Bot("AI", 'o')
-            #self._player1 = Bot.Bot("AI2", 'o')
+            #self._player1 = Bot.Bot("AI2", 'x')
             self._player1 = p.Player(self._view.get_input_playername(1), 'x')
             if self._player1 == 'q':
                 quit()
@@ -95,7 +95,12 @@ class Game:
                 self._view.print_nvm()
                 self.round(player)
         else:
-            player.make_best_move(self._board)
+            if player == self._player1:
+                inactive_player = self._player2
+            else:
+                inactive_player = self._player1
+            move = player.make_best_move(self._board, inactive_player)
+            self._view.print_move(move[1])
 
     def end_game(self, option):
         if option == "tie":
