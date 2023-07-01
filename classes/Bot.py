@@ -5,8 +5,8 @@ from classes import Token as t
 
 
 class Bot(p.Player):
-    def __init__(self):
-        super().__init__("AI", 'o')
+    def __init__(self, name, type):
+        super().__init__(name, type)
         self.is_AI = True
 
     def make_best_move(self, board):
@@ -56,7 +56,7 @@ class Bot(p.Player):
         if state == 0:
             return 0
         elif state != -1:
-            return 1 if state.get_name() == "AI" else -1
+            return 1 if state.get_name() == self._name else -1
 
         scores = []
         for move in self.get_possible_moves(board):
