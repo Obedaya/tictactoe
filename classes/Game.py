@@ -3,6 +3,7 @@ from classes import Player as p
 from classes import View as v
 from classes import Token as t
 from classes import FileHandler as fh
+from classes import Bot
 
 
 class Game:
@@ -38,8 +39,14 @@ class Game:
             self._round_number = game_state._round_number
             self._current_player = game_state._current_player
 
-
         elif option == 3:
+            self._player2 = Bot.Bot()
+            self._player1 = p.Player(self._view.get_input_playername(1), 'x')
+            if self._player1 == 'q':
+                quit()
+            self._current_player = self._player1
+
+        elif option == 4:
             quit()
 
 
@@ -75,15 +82,19 @@ class Game:
         self._view.print_next_player(player)
         field = self._board.get_field()
         self._view.print_field(field)
-        move = self._view.get_input_move()
-        if move == 'q':
-            self.pause_game()
-        if self.is_valid_move(move):
-            token = t.Token(player, player.get_type())
-            self._board.make_move(move, token)
+
+        if not player.is_AI:
+            move = self._view.get_input_move()
+            if move == 'q':
+                self.pause_game()
+            if self.is_valid_move(move):
+                token = t.Token(player, player.get_type())
+                self._board.make_move(move, token)
+            else:
+                self._view.print_nvm()
+                self.round(player)
         else:
-            self._view.print_nvm()
-            self.round(player)
+            player.make_best_move(self._board)
 
     def end_game(self, option):
         if option == "tie":

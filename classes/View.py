@@ -62,12 +62,13 @@ class View:
             print("----------------------------------")
             print("New game [1]")
             print("Load game [2]")
-            print("Quit [3]")
+            print("Play against AI [3]")
+            print("Quit [4]")
             print("----------------------------------")
             option = self.get_integer_input("Choose an option: ")
             if option == 'q':
-                option = 3
-            if 1 <= option <= 3:
+                option = 4
+            if 1 <= option <= 4:
                 return option
             else:
                 print("Please choose a valid option!")

@@ -1,6 +1,7 @@
 class Player:
     _name = None
     _type = None
+    is_AI = False
 
     def __init__(self, name, player_type):
         self._name = name
