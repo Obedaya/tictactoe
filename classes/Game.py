@@ -96,7 +96,7 @@ class Game:
     def end_game(self, option):
         if option == "tie":
             self._view.print_tie()
-        else:
+        elif option is not None:
             self._view.print_winner(option.get_name())
 
     def pause_game(self):
