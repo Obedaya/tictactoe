@@ -50,15 +50,6 @@ class Game:
         elif option == 4:
             quit()
 
-
-    def is_valid_move(self, move):
-        x, y = move
-        field = self._board.get_field()
-        if field[x][y] == " ":
-            return True
-        else:
-            return False
-
     def is_win(self):
         field = self._board.get_field()
         # Check for diagonal win
@@ -88,7 +79,7 @@ class Game:
             move = self._view.get_input_move()
             if move == 'q':
                 self.pause_game()
-            if self.is_valid_move(move):
+            if self._board.is_valid_move(move):
                 token = t.Token(player, player.get_type())
                 self._board.make_move(move, token)
             else:

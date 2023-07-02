@@ -8,6 +8,13 @@ class Board:
         x, y = move
         self._field[x][y] = token
 
+    def is_valid_move(self, move):
+        x, y = move
+        if self._field[x][y] == " ":
+            return True
+        else:
+            return False
+
     def get_field(self):
         return self._field
 

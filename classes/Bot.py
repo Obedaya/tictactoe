@@ -53,23 +53,38 @@ class Bot(p.Player):
 
     def is_win(self, board, inactive_player):
         field = board.get_field()
+
         # Check for diagonal win
-        if field[0][0] == field[1][1] == field[2][2] or field[0][2] == field[1][1] == field[2][0]:
-            if not isinstance(field[1][1], str):
-                if field[1][1].player.is_AI and field[1][1].player != inactive_player:
+        if (isinstance(field[0][0], t.Token) and isinstance(field[1][1], t.Token) and isinstance(field[2][2],
+                                                                                                 t.Token) and
+            field[0][0] == field[1][1] == field[2][2]) or \
+                (isinstance(field[0][2], t.Token) and isinstance(field[1][1], t.Token) and isinstance(field[2][0],
+                                                                                                      t.Token) and
+                 field[0][2] == field[1][1] == field[2][0]):
+
+            if field[1][1].player.is_AI and field[1][1].player != inactive_player:
+                return 0, 1
+            else:
+                return 1, 0
+
+        # Check for vertical or horizontal win
+        for i in range(3):
+            if (isinstance(field[i][0], t.Token) and isinstance(field[i][1], t.Token) and isinstance(field[i][2],
+                                                                                                     t.Token) and
+                field[i][0] == field[i][1] == field[i][2]) or \
+                    (isinstance(field[0][i], t.Token) and isinstance(field[1][i], t.Token) and isinstance(field[2][i],
+                                                                                                          t.Token) and
+                     field[0][i] == field[1][i] == field[2][i]):
+
+                if field[i][i].player.is_AI and field[i][i].player != inactive_player:
                     return 0, 1
                 else:
                     return 1, 0
-        # Check for vertical or horizontal win
-        for i in range(3):
-            if field[i][0] == field[i][1] == field[i][2] or field[0][i] == field[1][i] == field[2][i]:
-                if not isinstance(field[i][i], str):
-                    if field[i][i].player.is_AI and field[i][i].player != inactive_player:
-                        return 0, 1
-                    else:
-                        return 1, 0
+
         # Check for tie
         if any(" " in row for row in field):
             return 0, 0  # No winner or tie yet
 
         return 1, 1  # The game is a tie
+
+
