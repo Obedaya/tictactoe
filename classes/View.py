@@ -1,5 +1,6 @@
 from classes import Token as t
 
+
 class View:
     def get_integer_input(self, message):
         while True:

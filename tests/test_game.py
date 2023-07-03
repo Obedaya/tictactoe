@@ -60,13 +60,14 @@ class MockViewAI(MockView):
 
 class MockGameState:
     # This mock class is used to simulate a saved game state.
-    def __init__(self):
-        self._player1 = p.Player('Player1', 'x')
-        self._player2 = p.Player('Player2', 'o')
+    def __init__(self, player1_name='Player1', player2_name='Player2', field_state=None, round_number=1):
+        self._player1 = p.Player(player1_name, 'x')
+        self._player2 = p.Player(player2_name, 'o')
         self._board = b.Board()
-        self._round_number = 1
+        if field_state:
+            self._board.set_field(field_state)
+        self._round_number = round_number
         self._current_player = self._player1
-
 
 class TestGame(unittest.TestCase):
     def setUp(self):

@@ -41,7 +41,7 @@ class Game:
 
         elif option == 3:
             self._player2 = Bot.Bot("AI", 'o')
-            #self._player1 = Bot.Bot("AI2", 'x')
+            # self._player1 = Bot.Bot("AI2", 'x')
             self._player1 = p.Player(self._view.get_input_playername(1), 'x')
             if self._player1 == 'q':
                 quit()
