@@ -16,7 +16,7 @@ class Bot(p.Player):
         board.make_move(move[1], t.Token(self, self.get_type()))
         return move
 
-    def minimax(self, current_board, is_maximizing, inactive_player):
+    def minimax(self, current_board, is_maximizing, inactive_player, alpha=float('-inf'), beta=float('inf')):
         check_win = self.is_win(current_board, inactive_player)
         if check_win == (1, 1):  # Draw
             return 0, None
@@ -36,18 +36,25 @@ class Bot(p.Player):
                     current_field[j][k] = t.Token(inactive_player, inactive_player.get_type()) if not is_maximizing \
                         else t.Token(self, self.get_type())
                     current_board.set_field(current_field)
-                    score = self.minimax(current_board, not is_maximizing, inactive_player)[0]
+                    score = self.minimax(current_board, not is_maximizing, inactive_player, alpha, beta)[0]
                     current_field[j][k] = " "
                     current_board.set_field(current_field)
 
-                    if is_maximizing and score > best_score:
-                        best_score = score
-                        best_moves = [(j, k)]
-                    elif not is_maximizing and score < best_score:
-                        best_score = score
-                        best_moves = [(j, k)]
-                    elif score == best_score:
-                        best_moves.append((j, k))
+                    if is_maximizing:
+                        if score > best_score:
+                            best_score = score
+                            best_moves = [(j, k)]
+                        if score > alpha:
+                            alpha = score
+                    else:
+                        if score < best_score:
+                            best_score = score
+                            best_moves = [(j, k)]
+                        if score < beta:
+                            beta = score
+
+                    if beta <= alpha:
+                        break
 
         return best_score, random.choice(best_moves)
 
